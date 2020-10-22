@@ -6,24 +6,21 @@ from scipy import integrate
 from scipy import interpolate
 from scipy import special
 from scipy import misc
+from scipy import linalg
 from matplotlib import pylab
+from matplotlib import pyplot
 from pylab import linspace
 from pylab import ones
 from pylab import zeros
+from pylab import array
+from pylab import dot
+from pylab import matrix
+from pylab import shape
+from pylab import savefig
 from math import exp
 from math import pi
 from math import sqrt
-from pylab import array
-from pylab import dot
 from math import fabs
-from pylab import matrix
-from pylab import shape
-from pylab import plot
-from pylab import axis
-from pylab import xticks
-from pylab import show
-from scipy import linalg
-from pylab import savefig
 import excor
 import fccLattice
 ########################################################
@@ -94,7 +91,8 @@ def CRHS(E, l, R, Veff):
         }
     """
     N = len(R)
-    RHS = zeros(len(R), dtype=float)
+    #RHS = zeros(len(R), dtype=float)
+    RHS = zeros(N, dtype=float)
     weave.inline(codeRHS, ['N', 'E', 'l', 'R', 'Veff', 'RHS'], type_converters=weave.converters.blitz, compiler = 'gcc')
     return RHS
 
@@ -123,7 +121,8 @@ def SolvePoisson(Zq, R, rho):
      """
     U = array([-4*pi*r*rho[i] for i,r in enumerate(R)])
     Nmax = len(R)
-    dx = float( (R[-1]-R[0])/(len(R)-1.) )
+    #dx = float( (R[-1]-R[0])/(len(R)-1.) )
+    dx = float( (R[-1]-R[0])/(Nmax-1.) )
     Solution = zeros(len(R), dtype=float)
     Solution[0]=0
     Solution[1]=(R[1]-R[0]) # Boundary condition for U_H=V_H/r
@@ -143,24 +142,26 @@ def ComputeInterstitialOverlap(Km, RMuffinTin, Vol):
     """
     Olap_I = zeros((len(Km),len(Km)), dtype=float)
     for i in range(len(Km)):
-        Olap_I[i,i] = 1 - 4*pi*RMuffinTin**3/(3.*Vol)
+        #Olap_I[i,i] = 1 - 4*pi*RMuffinTin**3/(3.*Vol)
+        Olap_I[i,i] = 1 - 4*pi*pow(RMuffinTin, 3)/(3.*Vol)
         for j in range(i+1, len(Km)):
             KKl = sqrt(dot(Km[i]-Km[j],Km[i]-Km[j]))
             fbessel = special.sph_jn(1,KKl*RMuffinTin)[0][1]
-            Olap_I[i,j] = -4*pi*RMuffinTin**2*fbessel/(KKl*Vol)
+            #Olap_I[i,j] = -4*pi*RMuffinTin**2*fbessel/(KKl*Vol)
+            Olap_I[i,j] = -4*pi*pow(RMuffinTin, 2)*fbessel/(KKl*Vol)
             Olap_I[j,i] = Olap_I[i,j]
     return Olap_I
 
 def Wave(Z, Enu, R0, Veff):
     """Solves the SCH Eq for Psi(Enu) and its energy derivative
        Returns logarithmic derivative, Psi(l,E) and its energy derivative
-       Please  see Eq.30 on page 20 for definition, and Eq.49 on page 26
+       Please  see Eq.30 on page 19 for definition, and Eq.49 on page 26
        for S*Psi'(S)/Psi(S) and S*dPsi'(S)/dPsi(S)
     """
     def startSol(Z, l, r):
         "good choice for starting Numerov algorithm"
-        return r**(l+1)*(1-Z*r/(l+1))
-
+        #return r**(l+1)*(1-Z*r/(l+1))
+        return pow(r, (l+1))*(1-Z*r/(l+1))
     logDer=[]
     Psi_l=[]
     Psip_l=[]
@@ -171,7 +172,8 @@ def Wave(Z, Enu, R0, Veff):
         crhs[0]=0
         ur = Numerov(crhs, (R0[-1]-R0[0])/(len(R0)-1.), 0.0, startSol(Z,l,R0[1]))
         
-        ur *= 1/sqrt( integrate.simps(ur*ur, R0) )  # normalization
+        #ur *= 1/sqrt( integrate.simps(ur*ur, R0) )  # normalization
+        ur *= 1/sqrt( integrate.simps(pow(ur, 2), R0) )
         Psi_l.append( ur/R0 ) # storing Psi
         Psi_l[-1][0] = extrapolate(R0[0], R0[1], R0[2], ur[1]/R0[1], ur[2]/R0[2])
         
@@ -186,8 +188,8 @@ def Wave(Z, Enu, R0, Veff):
         Psip_l[-1][0] = extrapolate(R0[0], R0[1], R0[2], urp[1]/R0[1], urp[2]/R0[2])
         
         # <\cdot{\psi}|\cdot{\psi}>
-        PsipPsip = integrate.simps(urp*urp, R0)
-        
+        #PsipPsip = integrate.simps(urp*urp, R0)
+        PsipPsip = integrate.simps(pow(urp, 2), R0)
         # Computes the logarithmic derivative
         v1 = crhs[-1]*ur[-1]
         v0 = crhs[-2]*ur[-2]
@@ -213,7 +215,7 @@ def FindCoreStates(core, R, Veff, Z, fraction=4.):
         rhs = CRHS(Ex, l, R, Veff)
         h = (R[-1]-R[0])/(len(R)-1.)
         u = Numerov(rhs, h, R[0]*exp(-R[0]), R[1]*exp(-R[1]))
-        extraplt = u[-2]*(2+h**2*rhs[-2])-u[-3]
+        #extraplt = u[-2]*(2+h**2*rhs[-2])-u[-3]
         return u[-1]
 
     coreRho = zeros(len(R), dtype=float)
@@ -223,7 +225,8 @@ def FindCoreStates(core, R, Veff, Z, fraction=4.):
     states=[]
     for l in range(len(core)):
         n=0                           # number of states found
-        E = -0.5*Z*Z/(l+1)**2-3.      # here we starts to look for zero
+        #E = -0.5*Z*Z/(l+1)**2-3.      # here we starts to look for zero
+        E = -0.5*pow(Z, 2)/pow((l+1), 2)-3.
         dE = abs(E)/fraction          # the length of the first step 
         decrease = abs(E)/(abs(E)-dE) # the step will decrease to zero. Check the formula!
         v0 = root(E, l, R, Veff)      # starting value
@@ -235,10 +238,11 @@ def FindCoreStates(core, R, Veff, Z, fraction=4.):
                 # Density
                 rhs = CRHS(Energy, l, R, Veff)
                 u = Numerov(rhs, (R[-1]-R[0])/(len(R)-1.), R[0]*exp(-R[0]), R[1]*exp(-R[1]))
-                drho = u*u
+                #drho = u*u
+                drho = pow(u, 2)
                 norm = abs(integrate.simps(drho, R ))
-                drho *= 1./(norm*4*pi*R**2)
-                
+                #drho *= 1./(norm*4*pi*R**2)
+                drho *= 1./(norm*4*pi*pow(R, 2))
                 coreRho += drho * (2*(2*l+1.))
                 coreE   += Energy*(2*(2*l+1.))
                 coreZ   += 2*(2*l+1)
@@ -270,14 +274,15 @@ def ComputeEigensystem(k, Km, Olap_I, Enu, logDer, RMuffinTin, Vol, VKSi=0):
            the logarithmic derivative is diverging while j*dlog(j(x))/dx is not
         """
         if (fabs(x)<1e-5):
-            return [(l, x**l/misc.factorial2(2*l+1), l*x**l/misc.factorial2(2*l+1)) for l in range(lmax+1)]
+            #return [(l, x**l/misc.factorial2(2*l+1), l*x**l/misc.factorial2(2*l+1)) for l in range(lmax+1)]
+            return [(l, pow(x, l)/misc.factorial2(2*l+1), l*pow(x, l)/misc.factorial2(2*l+1)) for l in range(lmax+1)]
         else:
             (jls, djls) = special.sph_jn(lmax,x) # all jl's and derivatives for l=[0,...lmax]
             return [(x*djls[l]/jls[l], jls[l], x*djls[l]) for l in range(lmax+1)]
 
 
     # Here we prepare some quantities which depend only on one reciprocal vector K
-    # These quantities are defined on pg.26 are are
+    # These quantities are defined on pg.26 are
     #   omegal = \omega_{l,K}
     #   C1    -- part of C^{(2)}_l
     #   PP    -- <\cdot{psi}|\cdot{psi}>
@@ -328,7 +333,7 @@ def ComputeEigensystem(k, Km, Olap_I, Enu, logDer, RMuffinTin, Vol, VKSi=0):
     # It computes the Legendre polynomial for all values of argums(K,K') precomputes above
     # and for all l up to lmax=len(Enu)
     # The few lowest order Legendre polynomials are precomputes and recursion is used only for high order l.
-    #   Computes:  Leg(K,K',l) = P_l(argums(K,K'))
+    # Computes:  Leg(K,K',l) = P_l(argums(K,K'))
     codeLegendre="""
       for (int iK=0; iK<argums.shape()[0]; iK++)
       {
@@ -399,12 +404,12 @@ def ComputeEigensystem(k, Km, Olap_I, Enu, logDer, RMuffinTin, Vol, VKSi=0):
     
     # Diagonalizes the LAPW Hamiltonian
     #Ek, Ar = symeig.symeig(Ham, Olap, type=1) # symmetric generalized eigenvalue problem
-    Ek, Ar = linalg.eigh(Ham, Olap, type=1) # symmetric generalized eigenvalue problem
+    Ek, Ar = linalg.eigh(Ham, Olap, type=1)
     
     #print matrix(Ar).T * matrix(Ham) * matrix(Ar)
     
     # Calculation of weights for valence density
-    # Implements the weight functions Eqs.58, 59, 60, 61 on page 30.
+    # Implements the weight functions Eqs.64, 63, 62, 61 on page 30.
     Ar = matrix(Ar)
     w0 = zeros((len(Enu),len(Ar)),dtype=float)
     w1 = zeros((len(Enu),len(Ar)),dtype=float)
@@ -443,8 +448,8 @@ def rootChemicalPotential(mu, Ek, wkp, Zval, beta=50.):
 
 
 def ComputeMTDensity(mu, Ek, wkp, w0, w1, w2, Psi_l, Psip_l, beta=50.):
-    """Given the coefficients Eqs.58-61 on page 30, it computes the valence charge
-       given the chemical potential mu. The Eq. 36 on page 31 descibes the algorithm.
+    """Given the coefficients Eqs.61-64 on page 30, it computes the valence charge
+       given the chemical potential mu. The Eq. 66 on page 30 descibes the algorithm.
        Eq.36 shows that the radial solution of the SCH equation is necessary together with its energy derivative
     """
     code_sum="""
@@ -474,13 +479,13 @@ def ComputeMTDensity(mu, Ek, wkp, w0, w1, w2, Psi_l, Psip_l, beta=50.):
             wgh[l,:] += array(dws) * wkp[ik]
         #print "%3d %20.10f %20.10f %20.10f" % (l, wgh[l,0], wgh[l,1], wgh[l,2])
 
-    # Implements Eq.63 on page 31.
+    # Implements Eq.66 on page 30.
     nR = len(Psi_l[0])
     MTRho = zeros(nR, dtype=float)
     for l in range(nlmax):
         for ir in range(nR):
-            MTRho[ir] += wgh[l,0]*Psi_l[l][ir]**2 + wgh[l,1]*Psi_l[l][ir]*Psip_l[l][ir] + wgh[l,2]*Psip_l[l][ir]**2
-            
+            #MTRho[ir] += wgh[l,0]*Psi_l[l][ir]**2 + wgh[l,1]*Psi_l[l][ir]*Psip_l[l][ir] + wgh[l,2]*Psip_l[l][ir]**2
+            MTRho[ir] += wgh[l,0]*pow(Psi_l[l][ir], 2) + wgh[l,1]*Psi_l[l][ir]*Psip_l[l][ir] + wgh[l,2]*pow(Psip_l[l][ir], 2)
     MTRho *= 2/(4*pi)  # 2 due to spin
 
     return MTRho
@@ -524,8 +529,8 @@ def Atom_ChargeDensity(states, R, Veff, Z):
         h = (R[-1]-R[0])/(len(R)-1.)
         u = Numerov(rhs, h, R[0]*exp(-R[0]), R[1]*exp(-R[1]))
         u /= sqrt(abs(sum(u)*h))   # To avoid overflow
-        
-        u2 = u**2
+        u2 = pow(u, 2)
+        #u2 = u**2
         norm = abs(integrate.simps(u2, R))
         u2 *= 1./norm
 
@@ -534,13 +539,14 @@ def Atom_ChargeDensity(states, R, Veff, Z):
             ferm = 1.
         else:
             ferm = (Z-N)/dN
-        drho = u2[:]*dN*ferm/(4*pi*R**2)
-        
+        #drho = u2[:]*dN*ferm/(4*pi*R**2)
+        drho = u2[:]*dN*ferm/(4*pi*pow(R, 2))
         rho += drho
 
         N += dN
         Ebs += E * ferm*dN
-        if N>=Z: break
+        if N>=Z:
+            break
 
     rho[-1] = extrapolate(0.0, R[-2], R[-3], rho[-2], rho[-3])
     return (rho, Ebs)
@@ -597,17 +603,18 @@ def Atom_charge(Z, core, mix=0.3, RmaxAtom=10., Natom=3001, precision=1e-5, Nitt
        (nrho, Ebs) = Atom_ChargeDensity(states, Ra, Veff, Z)
 
        # Total energy
-       pot = (ExcVxc*R0**2-0.5*UHartree*R0)*nrho[::-1]*4*pi
-
+       #pot = (ExcVxc*R0**2-0.5*UHartree*R0)*nrho[::-1]*4*pi
+       pot = (ExcVxc*pow(R0, 2)-0.5*UHartree*R0)*nrho[::-1]*4*pi
        Etot = integrate.simps(pot, R0) + Ebs
        Ediff = abs(Etot-Etot_old)
-       
-       print ' %d), Etot = %f, Eband = %f, Ediff = %f' % (itt, Etot, Ebs, Ediff)
+       print RED, ' %d), Etot = %f, Eband = %f, Ediff = %f' % (itt, Etot, Ebs, Ediff), DEFAULT_COLOR
+       #print ' %d), Etot = %f, Eband = %f, Ediff = %f' % (itt, Etot, Ebs, Ediff)
        # Mixing
        rho = mix*nrho[::-1] + (1-mix)*rho
        Etot_old = Etot
 
-       if Ediff < precision: break
+       if Ediff < precision:
+           break
 
    return (R0, rho)
    
@@ -633,7 +640,7 @@ if __name__ == '__main__':
     ###################################
     # Start input parameters
     Z=29                     # Number of electrons in the atom
-    LatConst = 6.8219117     # Lattic constant
+    LatConst = 6.8219117     # Lattice constant
     nkp = 8                  # Number of k-points in 1BZ: (nkp x nkp x nkp)
     #### Core states ##############
     core = [3,2,0]  # 1s,2s,3s, 1p,2p, no-d
@@ -644,10 +651,10 @@ if __name__ == '__main__':
     N = 1001                 # Number of points in radial mesh
     beta=50.                 # To compute chemical potential we take finite inverse temperature
     mu_mm = [0.0, 1.0]       # Chemical potential is searched between mu_mm[0] and mu_mm[1]
-    CutOffK=3.5              # Largest lengt of reciprocal vectors K (only shorter vec. are taken into account)
+    CutOffK=3.5              # Largest length of reciprocal vectors K (only shorter vec. are taken into account)
     DRho = 1e-3              # Convergence criteria for electronic density Rho
     Nitt = 100               # Maximum number of itterations
-    #Nitt = 1000              # Maximum number of itterations
+    #Nitt = 1000
     mixRho = 0.3             # Linear mixing parameter for charge
     Nkplot = 200             # Number of k-points for plotting bands
     plotMM = [-1.,0.1]       # Bands will be plotted in this energy range
@@ -660,7 +667,7 @@ if __name__ == '__main__':
     Zval = Z-Zcor
     print "Z core =", Zcor, "and Z valence =", Zval
     #print "Z core =", Zcor, "and Z value =", Zval
-    # Creates atomic charge to have a good starting point
+    # Create atomic charge to have a good starting point
     (Atom_R0, Atom_rho) = Atom_charge(Z, core, 0.3)
     AtomRhoSpline = interpolate.splrep(Atom_R0, Atom_rho, s=0)
     
@@ -669,17 +676,17 @@ if __name__ == '__main__':
     #XC = excor.ExchangeCorrelation(5)
     # Generates and stores momentum points
     #fcc = FccLattice(LatConst)                  # Information about lattice
-    fcc = fccLattice.FccLattice(LatConst)                  # Information about lattice
-    RMuffinTin = fcc.RMuffinTin()               # Muffin-Tin radius choosen such that spheres touch
+    fcc = fccLattice.FccLattice(LatConst)
+    RMuffinTin = fcc.RMuffinTin()               # Muffin-Tin radius chosen such that spheres touch
     #VMT = 4*pi*RMuffinTin**3/3.                 # Volume of MT
-    VMT = (4/3.)*pi*pow(RMuffinTin, 3)          # Volume of MT
+    VMT = (4/3.)*pi*pow(RMuffinTin, 3)
     Vinter = fcc.Volume-VMT                     # Volume of the interstitial region
     print "Muffin-Tin radius          = ", RMuffinTin
     print "Volume of the MT sphere    = ", VMT
     print "Volume of the unit cell    = ", fcc.Volume
     print "Volume of the interstitial = ", Vinter
-    fcc.GenerateReciprocalVectors(4, CutOffK)   # Reciprocal bravais lattice is builded, K points taken into account only for |K|<CutOff
-    fcc.ChoosePointsInFBZ(nkp,0)                # Chooses the path in the 1BZ or the k-points in the irreducible 1BZ
+    fcc.GenerateReciprocalVectors(4, CutOffK)   # Reciprocal bravais lattice is built, K points taken into account only for |K|<CutOff
+    fcc.ChoosePointsInFBZ(nkp,0)                # Choose the path in the 1BZ or the k-points in the irreducible 1BZ
 
     # Radial mesh --  only linear mesh can be used in connection to Numerov algorithm.
     R0 = linspace(0, RMuffinTin, N)
@@ -720,10 +727,11 @@ if __name__ == '__main__':
         print GREEN, 'New chemical potential is', mu, DEFAULT_COLOR
         MTRho = ComputeMTDensity(mu, Ek, fcc.wkp, w0, w1, w2, Psi_l, Psip_l, beta)
         nTotRho = MTRho + coreRho
-        
-        sMTRho = integrate.simps(MTRho*R0**2*(4*pi), R0)
+        sMTRho = integrate.simps(MTRho*pow(R0, 2)*(4*pi), R0)
+        #sMTRho = integrate.simps(MTRho*R0**2*(4*pi), R0)
         sIntRho = ComputeInterstitialCharge(mu, Ek, wi, fcc.wkp, beta)
-        sCoreRho = integrate.simps(coreRho*R0**2*(4*pi), R0)
+        #sCoreRho = integrate.simps(coreRho*R0**2*(4*pi), R0)
+        sCoreRho = integrate.simps(coreRho*pow(R0, 2)*(4*pi), R0)
         print ' Z value =', Zval, '~', sMTRho+sIntRho
         print ' Weight in the MT sphere =', sMTRho, 'and in the interstitials =', sIntRho, 'and in core =', sCoreRho
         renorm = Z/(sMTRho+sIntRho+sCoreRho)
@@ -732,35 +740,40 @@ if __name__ == '__main__':
 
         DiffRho = integrate.simps(abs(nTotRho-TotRho), R0)
         print BLUE, 'Electron density difference =', DiffRho, DEFAULT_COLOR
-        if (DiffRho<DRho): break
+        if (DiffRho<DRho):
+            break
         
         TotRho = mixRho * nTotRho + (1-mixRho)*TotRho
-    
 
     # Plotting bands
     fcc.ChoosePointsInFBZ(Nkplot, type=1) 
-    
+    pyplot.title("Cu band structure")
+    pyplot.xlabel("k-space")
+    pyplot.ylabel("Energy")
     Ek=[]
     for ik,k in enumerate(fcc.kp):
         (tEk, tAr, tw0, tw1, tw2, twi) = ComputeEigensystem(k, fcc.Km, Olap_I, Enu, logDer, RMuffinTin, fcc.Volume)
         Ek.append(tEk)
     Ek = array(Ek)
 
-
     for i in range(shape(Ek)[1]):
         if max(Ek[:,i])-mu > plotMM[0] and min(Ek[:,i])-mu < plotMM[1]:
-            plot(Ek[:,i]-mu, 'k-', lw=2)
-
-    plot([0,len(Ek)],[0,0], 'k:')  # chemical potential line
-    ax=axis()
-
+            #plot(Ek[:,i]-mu, 'k-', lw=2)
+            pyplot.plot(Ek[:,i]-mu, 'k-', lw=2)
+    #plot([0,len(Ek)],[0,0], 'k:')  # chemical potential line
+    pyplot.plot([0,len(Ek)],[0,0], 'k:')
+    #ax=axis()
+    ax=pyplot.axis()
     xlabs = [p[1] for p in fcc.Points]
     labs  = [p[0] for p in fcc.Points]
-    xticks(xlabs, labs)
-    
+    #xticks(xlabs, labs)
+    pyplot.xticks(xlabs, labs)
     for ix,x in enumerate(xlabs):
-        plot([x,x], [ax[2],ax[3]], 'k:')
-        
-    axis([xlabs[0], xlabs[-1], ax[2], ax[3]])
-    savefig('bands', dpi=632.5) #4048 x 3036 pixels
-    show()
+        #plot([x,x], [ax[2],ax[3]], 'k:')
+        pyplot.plot([x,x], [ax[2],ax[3]], 'k:')
+    #axis([xlabs[0], xlabs[-1], ax[2], ax[3]])
+    pyplot.axis([xlabs[0], xlabs[-1], ax[2], ax[3]])
+    #savefig('bands', dpi=632.5) #4048 x 3036 pixels
+    savefig('bands')
+    #show()
+    pyplot.show()

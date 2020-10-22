@@ -43,7 +43,8 @@ class FccLattice:
             for l in range(-q,q+1):
                 for m in range(-q, q+1):
                     vec = n*self.b0+l*self.b1+m*self.b2
-                    if dot(vec,vec) <= CutOffK**2:
+                    #if dot(vec,vec) <= CutOffK**2:
+                    if dot(vec,vec) <= pow(CutOffK, 2):
                         Kmesh0.append(vec)
                     
         Kmesh0.sort(lambda x,y: cmp(dot(x,x), dot(y,y)))
@@ -72,7 +73,7 @@ class FccLattice:
                 
             # ChooseIrreducible k-points only
             # The function performs all symmetry operations of a cubic point-group to each k-point and
-            # keeps only thos k-points which can not be obtained from another k-point by group operation.
+            # keeps only those k-points which can not be obtained from another k-point by group operation.
             # These k-points are obviously irreducible.
             irkp = []       # temporary list where irreducible k points will be stored
             wkp  = []       # temporary weights
@@ -81,7 +82,7 @@ class FccLattice:
                 irkp.append(tk)          # the first can be stored as irreducible
                 wkp.append(0)            # and the weights for this irreducible k-point is set to zero
                 # We go over 48 symmetry operations of cubic system:
-                # Each wector component can change sign: 2^3=8 possibilities
+                # Each vector component can change sign: 2^3=8 possibilities
                 # All permutations of components: 3!=6
                 # Since the operations are independent, we have 3!*2^3=48 operations == number of cubic point group operations
                 for ix in [-1,1]:  # three loops for all possible sign changes 
@@ -109,8 +110,8 @@ class FccLattice:
             print "number of k-points =", nkp
             self.kp = zeros((nkp,3), dtype=float)
             N0=nkp/4
-
-            self.Points = [('$\Gamma$', 0), ('$X$', N0), ('$L$', 2*N0), ('$\Gamma$', 3*N0), ('$K$', 4*N0)]
+            #self.Points = [('$\Gamma$', 0), ('$X$', N0), ('$L$', 2*N0), ('$\Gamma$', 3*N0), ('$K$', 4*N0)]
+            self.Points = [(r'$\Gamma$', 0), ('X', N0), ('L', 2*N0), (r'$\Gamma$', 3*N0), ('K', 4*N0)]
             for i in range(N0): self.kp[i,:]      = self.GPoint + (self.XPoint-self.GPoint)*i/(N0-0.)
             for i in range(N0): self.kp[N0+i,:]   = self.XPoint + (self.LPoint-self.XPoint)*i/(N0-0.)
             for i in range(N0): self.kp[N0*2+i,:] = self.LPoint + (self.GPoint-self.LPoint)*i/(N0-0.)
