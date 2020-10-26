@@ -563,8 +563,8 @@ def Atom_charge(Z, core, mix=0.3, RmaxAtom=10., Natom=3001, precision=1e-5, Nitt
       precision     --  How precise total energy we need      
       Nitt          --  Maximum number of itterations
       """
-   #XC = excor.ExchangeCorrelation(5)
-   XC = excor.ExchangeCorrelation(3)  # Exchange correlations class; VWN seems to be the best (look http://physics.nist.gov/PhysRefData/DFTdata/Tables/ptable.html)
+   XC = excor.ExchangeCorrelation(5)
+   #XC = excor.ExchangeCorrelation(3)  # Exchange correlations class; VWN seems to be the best (look http://physics.nist.gov/PhysRefData/DFTdata/Tables/ptable.html)
    R0 = linspace(1e-10, RmaxAtom, Natom) # Radial mesh
    Ra = R0[::-1]                         # Inverse radial mesh
 
@@ -672,8 +672,8 @@ if __name__ == '__main__':
     AtomRhoSpline = interpolate.splrep(Atom_R0, Atom_rho, s=0)
     
     # Exchange correlations class; WVN seems to be the best (look http://physics.nist.gov/PhysRefData/DFTdata/Tables/ptable.html)    
-    XC = excor.ExchangeCorrelation(3)
-    #XC = excor.ExchangeCorrelation(5)
+    #XC = excor.ExchangeCorrelation(3)
+    XC = excor.ExchangeCorrelation(5)
     # Generates and stores momentum points
     #fcc = FccLattice(LatConst)                  # Information about lattice
     fcc = fccLattice.FccLattice(LatConst)

@@ -3,7 +3,7 @@ exchange-correlation potential and
 exchange-correlation energy within LDA
 
 class name:
-    ExchangeCorrelation(type)  --     type can be 1,2,3,4
+    ExchangeCorrelation(type)  --     type can be 1,2,3,4,5
 Adopted from Kristjan Haule
 Modified more and optimized by Edmond Febrinicko Armay    
 """
@@ -13,6 +13,8 @@ from math import sin
 from math import sqrt
 from math import atan
 from math import log
+from pythtb import *
+from numpy import array
 class  ExchangeCorrelation(object):
     """******************************************************************************/
     Calculates Exchange-Correlation Energy and Potential                       */ 
@@ -57,6 +59,13 @@ class  ExchangeCorrelation(object):
             self.A = 21
 
     def Vx(self, rs): # Vx
+        #lat=[[0.5, 0.5, 0.0], [0.5, 0.0, 0.5], [0.0, 0.5, 0.5]]
+        #orb=[[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+        #my_model=tb_model(3, 3, lat)
+        #circ_step=31
+        #circ_center=array([1.0/3.0, 2.0/3.0])
+        #circ_radius=0.05
+        #w_circ=wf_array(my_model, [circ_step])
         #return -self.alphax/rs
         return (-1/(2*pow(pi, 2)))*(exp(-self.alphax*rs)/pow(rs, 3))*(sin(self.alphax*rs)/rs) #Yukawa's screened exchange
 
@@ -76,34 +85,33 @@ class  ExchangeCorrelation(object):
             atnp = atan(self.Qp/(2*x+self.bp))
             ecp = 0.5*self.Ap*(log(x*x/xpx)+self.cp1*atnp-self.cp3*(log((x-self.xp0)**2/xpx)+self.cp2*atnp))
             return ecp - self.Ap/6.*(self.cp*(x-self.xp0)-self.bp*x*self.xp0)/((x-self.xp0)*xpx)
-        else:
-        #elif(self.type<5):
+        #else:
+        elif(self.type<5):
             if rs>1:
                 return self.gamma/(1+self.beta1*sqrt(rs)+self.beta2*rs)*(1+7/6.*self.beta1*sqrt(rs)+self.beta2*rs)/(1+self.beta1*sqrt(rs)+self.beta2*rs)
             else:
                 return self.Aw*log(rs)+self.Bw-self.Aw/3.+2/3.*self.Cw*rs*log(rs)+(2*self.D-self.Cw)*rs/3.
-        """else:
+        else:
             #paramagnetic
             a=(log(2)-1)/(2*pow(pi, 2))
             b=20.4562557
             #ferromagnetic
-            a=(log(2)-1)/(4*pow(pi, 2))
-            b=27.4203609
-            return log(1+(b/rs)+(b/pow(rs, 2)))"""
+            #a=(log(2)-1)/(4*pow(pi, 2))
+            #b=27.4203609
+            return a*log(1+(b/rs)+(b/pow(rs, 2)))
     def EcVc(self, rs): # Ec-Vc
         if self.type<3 :
             x = rs/self.A
             epsilon = -0.5*self.C*((1+x*x*x)*log(1+1/x)+0.5*x-x*x-1/3.)
             return epsilon-Vc(rs)
-        elif self.type<4: # type=3 WVN
+        elif self.type<4: # type=3 VWN
             x = sqrt(rs)
             return self.Ap/6.*(self.cp*(x-self.xp0)-self.bp*x*self.xp0)/((x-self.xp0)*(x*x+self.bp*x+self.cp))
-        else:
-        #elif self.type<5:
+        #else:
+        elif self.type<5:
             if rs>1:
                 return 2*self.gamma/(1+self.beta1*sqrt(rs)+self.beta2*rs)-Vc(rs)
             else:
                 return self.Aw*log(rs)+self.Bw+self.Cw*rs*log(rs)+self.D*rs-Vc(rs)
-        """else:
-            x = sqrt(rs)
-            return self.Ap/6.*(self.cp*(x-self.xp0)-self.bp*x*self.xp0)/((x-self.xp0)*(x*x+self.bp*x+self.cp))"""
+        else:
+            return 0
