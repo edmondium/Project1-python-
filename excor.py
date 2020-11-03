@@ -15,6 +15,7 @@ from math import atan
 from math import log
 from pythtb import *
 from numpy import array
+#from math import cos
 class  ExchangeCorrelation(object):
     """******************************************************************************/
     Calculates Exchange-Correlation Energy and Potential                       */ 
@@ -59,16 +60,14 @@ class  ExchangeCorrelation(object):
             self.A = 21
 
     def Vx(self, rs): # Vx
-        #lat=[[0.5, 0.5, 0.0], [0.5, 0.0, 0.5], [0.0, 0.5, 0.5]]
-        #orb=[[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
-        #my_model=tb_model(3, 3, lat)
-        #circ_step=31
-        #circ_center=array([1.0/3.0, 2.0/3.0])
-        #circ_radius=0.05
-        #w_circ=wf_array(my_model, [circ_step])
+        copper=w90(r"copper")
+        fermi_ev=0.7E+01
+        my_model=copper.model(zero_energy=fermi_ev, min_hopping_norm=0.01, max_distance=None, ignorable_imaginary_part=0.01)
+        
         #return -self.alphax/rs
+        #return (-1/(2*pow(pi, 2)))*(exp(-self.alphax*rs)/pow(rs, 3))*((sin(self.alphax*rs)/rs)-(self.alphax*cos(self.alphax*rs)))
         return (-1/(2*pow(pi, 2)))*(exp(-self.alphax*rs)/pow(rs, 3))*(sin(self.alphax*rs)/rs) #Yukawa's screened exchange
-
+        
     def ExVx(self, rs): # Ex-Vx
         return 0.25*self.alphax/rs
     
