@@ -1,0 +1,167 @@
+#!/bin/sh
+
+# run from directory where this script is
+cd `echo $0 | sed 's/\(.*\)\/.*/\1/'` # extract pathname
+EXAMPLE_DIR=`pwd`
+
+# check whether echo has the -e option
+if test "`echo -e`" = "-e" ; then ECHO=echo ; else ECHO="echo -e" ; fi
+
+$ECHO
+$ECHO "$EXAMPLE_DIR : starting"
+$ECHO
+$ECHO "It shows how to calculate the polarization via Berry Phase"
+$ECHO "in Ti (contributed by the Vanderbilt Group in Rutgers University)."
+
+# set the needed environment variables
+. ../../../environment_variables
+
+# required executables and pseudopotentials
+BIN_LIST="pw.x"
+PSEUDO_LIST="Ti.pbe-sp-van_ak.UPF"
+
+$ECHO
+$ECHO "  executables directory: $BIN_DIR"
+$ECHO "  pseudo directory:      $PSEUDO_DIR"
+$ECHO "  temporary directory:   $TMP_DIR"
+$ECHO "  checking that needed directories and files exist...\c"
+
+# check for directories
+for DIR in "$BIN_DIR" "$PSEUDO_DIR" ; do
+    if test ! -d $DIR ; then
+        $ECHO
+        $ECHO "ERROR: $DIR not existent or not a directory"
+        $ECHO "Aborting"
+        exit 1
+    fi
+done
+for DIR in "$TMP_DIR" "$EXAMPLE_DIR/results" ; do
+    if test ! -d $DIR ; then
+        mkdir $DIR
+    fi
+done
+cd $EXAMPLE_DIR/results
+
+# check for executables
+for FILE in $BIN_LIST ; do
+    if test ! -x $BIN_DIR/$FILE ; then
+        $ECHO
+        $ECHO "ERROR: $BIN_DIR/$FILE not existent or not executable"
+        $ECHO "Aborting"
+        exit 1
+    fi
+done
+
+# check for pseudopotentials
+for FILE in $PSEUDO_LIST ; do
+    if test ! -r $PSEUDO_DIR/$FILE ; then
+       $ECHO
+       $ECHO "Downloading $FILE to $PSEUDO_DIR...\c"
+            $WGET $PSEUDO_DIR/$FILE $NETWORK_PSEUDO/$FILE 2> /dev/null
+    fi
+    if test $? != 0; then
+        $ECHO
+        $ECHO "ERROR: $PSEUDO_DIR/$FILE not existent or not readable"
+        $ECHO "Aborting"
+        exit 1
+    fi
+done
+$ECHO " done"
+
+# how to run executables
+PW_COMMAND="mpirun -np 2 $BIN_DIR/pw.x $PARA_POSTFIX"
+$ECHO
+$ECHO "  running pw.x as: $PW_COMMAND"
+$ECHO
+
+# self-consistent calculation
+cat > Ti-chg.in << EOF
+ &control
+    calculation  = 'scf'
+    restart_mode = 'from_scratch'
+    pseudo_dir   = '$PSEUDO_DIR/'
+    outdir       = '$TMP_DIR/'
+ /
+ &system
+    ibrav=4
+    celldm(1)=5.57620385
+    celldm(3)=8.85431176
+    nat=1
+    ntyp=1
+    nbnd=25
+    ecutwfc=10.0
+    lspinorb=.false.
+    noncolin=.false.
+    starting_magnetization(1)=-1
+    occupations = 'smearing'
+    smearing='cold'
+    degauss=0.02
+ /
+ &electrons
+    startingwfc='random'
+    diagonalization='cg'
+    conv_thr = 1e-12,
+    mixing_beta=0.3,
+ /
+ATOMIC_SPECIES
+  Ti   47.867      Ti.pbe-sp-van_ak.UPF
+ATOMIC_POSITIONS alat
+  Ti    0.000    0.000    0.000
+K_POINTS {automatic}
+  16 16 16 0 0 0
+EOF
+$ECHO "  running self-consistent calculation in Ti...\c"
+$PW_COMMAND < Ti-chg.in > Ti-chg.out
+check_failure $?
+$ECHO " done"
+
+# Berry Phase calculation
+cat > Ti-BP.in << EOF
+ &control
+    calculation   = 'nscf'
+    pseudo_dir    = '$PSEUDO_DIR/'
+    outdir        = '$TMP_DIR/'
+    lberry        = .true.
+    gdir          = 3
+    nppstr        = 7
+ /
+ &system
+    ibrav         = 4
+    celldm(1)     = 5.57620385
+    celldm(3)     = 8.85431176
+    nat           = 1
+    ntyp          = 1
+    nbnd          = 28
+    ecutwfc       = 10.0
+    lspinorb      = .false.
+    noncolin      = .false.
+    starting_magnetization(1)=-1
+    occupations   = 'fixed'
+    degauss       = 0.00
+ /
+ &electrons
+    startingwfc   = 'random'
+    diagonalization='cg'
+    conv_thr      = 1e-10
+    mixing_beta   = 0.3
+ /
+ATOMIC_SPECIES
+  Ti   47.867      Ti.pbe-sp-van_ak.UPF
+ATOMIC_POSITIONS alat
+  Ti    0.000    0.000    0.000
+K_POINTS {automatic}
+  16 16 16  0 0 0
+EOF
+$ECHO "  running Berry Phase calculation for Ti...\c"
+$PW_COMMAND < Ti-BP.in > Ti-BP.out
+check_failure $?
+$ECHO " done"
+
+# clean TMP_DIR
+$ECHO "  cleaning $TMP_DIR...\c"
+rm -rf $TMP_DIR/pwscf*
+$ECHO " done"
+
+
+$ECHO
+$ECHO "$EXAMPLE_DIR: done"

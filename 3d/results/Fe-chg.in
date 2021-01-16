@@ -1,0 +1,32 @@
+ &control
+    calculation  = 'scf'
+    restart_mode = 'from_scratch'
+    pseudo_dir   = '/home/edmondium/Documents/qe-6.7/pseudo/'
+    outdir       = '/home/edmondium/Documents/qe-6.7/tempdir/'
+ /
+ &system
+    ibrav=3
+    celldm(1)=5.4235,
+    nat=1
+    ntyp=1
+    nbnd=25
+    ecutwfc=120.0
+    lspinorb=.true.
+    noncolin=.true.
+    starting_magnetization(1)=-1
+    occupations = 'smearing'
+    smearing='cold'
+    degauss=0.02
+ /
+ &electrons
+    startingwfc='random'
+    diagonalization='cg'
+    conv_thr = 1e-12,
+    mixing_beta=0.3,
+ /
+ATOMIC_SPECIES
+  Fe   55.85      Fe.jry.pbe.UPF
+ATOMIC_POSITIONS alat
+  Fe    0.000    0.000    0.000
+K_POINTS {automatic}
+  16 16 16 0 0 0

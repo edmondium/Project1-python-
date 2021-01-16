@@ -1,0 +1,33 @@
+ &control
+    calculation   = 'nscf'
+    pseudo_dir    = '/home/edmondium/Documents/qe-6.7/pseudo/'
+    outdir        = '/home/edmondium/Documents/qe-6.7/tempdir/'
+    lberry        = .true.
+    gdir          = 3
+    nppstr        = 7
+ /
+ &system
+    ibrav         = 3
+    celldm(1)     = 16.8421841
+    nat           = 1
+    ntyp          = 1
+    nbnd          = 28
+    ecutwfc       = 30.0
+    lspinorb      = .false.
+    noncolin      = .false.
+    starting_magnetization(1)=-1
+    occupations   = 'fixed'
+    degauss       = 0.00
+ /
+ &electrons
+    startingwfc   = 'random'
+    diagonalization='cg'
+    conv_thr      = 1e-10
+    mixing_beta   = 0.3
+ /
+ATOMIC_SPECIES
+  Mn   54.938043      Mn.pbe-sp-van.UPF
+ATOMIC_POSITIONS alat
+  Mn    0.000    0.000    0.000
+K_POINTS {automatic}
+  16 16 16  0 0 0
