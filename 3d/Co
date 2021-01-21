@@ -138,6 +138,7 @@ cat > Co-BP.in << EOF
     starting_magnetization(1)=-1
     occupations   = 'fixed'
     degauss       = 0.00
+    nspin         = 2
  /
  &electrons
     startingwfc   = 'random'

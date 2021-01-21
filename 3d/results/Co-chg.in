@@ -6,19 +6,18 @@
  /
  &system
     ibrav=4
-    celldm(1)=5.03593115
-    celldm(3)=9.3480972
+    celldm(1)=4.73773237
+    celldm(3)=7.69024047
     nat=2
     ntyp=1
     nbnd=25
-    ecutwfc=44.0
-    ecutrho=276
-    lspinorb=.false.
-    noncolin=.false.
-    starting_magnetization(1)=0
+    ecutwfc=30.0
+    ecutrho=250
+    starting_magnetization(1)=-1
     occupations = 'smearing'
     smearing='cold'
     degauss=0.02
+    nspin=2
  /
  &electrons
     startingwfc='random'
@@ -26,14 +25,10 @@
     conv_thr = 1e-12,
     mixing_beta=0.3,
  /
- &IONS
- /
- &CELL
- /
 ATOMIC_SPECIES
-  Zn   65.38      Zn.pbe-dnl-rrkjus_psl.1.0.0.UPF
-ATOMIC_POSITIONS alat
-  Zn    0.000    0.000    0.000
-  Zn    0.667    0.333    0.500
+  Co   58.933194      Co.pz-nd-rrkjus.UPF
+ATOMIC_POSITIONS
+  Co    0.000    0.000    0.000
+  Co    0.333    0.667    0.250
 K_POINTS {automatic}
   16 16 16 0 0 0
