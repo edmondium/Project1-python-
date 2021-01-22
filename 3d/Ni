@@ -1,0 +1,171 @@
+#!/bin/sh
+
+# run from directory where this script is
+cd `echo $0 | sed 's/\(.*\)\/.*/\1/'` # extract pathname
+EXAMPLE_DIR=`pwd`
+
+# check whether echo has the -e option
+if test "`echo -e`" = "-e" ; then ECHO=echo ; else ECHO="echo -e" ; fi
+
+$ECHO
+$ECHO "$EXAMPLE_DIR : starting"
+$ECHO
+$ECHO "It shows how to calculate the polarization via Berry Phase"
+$ECHO "in Ni (contributed by the Vanderbilt Group in Rutgers University)."
+
+# set the needed environment variables
+. ../../../environment_variables
+
+# required executables and pseudopotentials
+BIN_LIST="pw.x"
+PSEUDO_LIST="Ni.pz-nd-rrkjus.UPF"
+
+$ECHO
+$ECHO "  executables directory: $BIN_DIR"
+$ECHO "  pseudo directory:      $PSEUDO_DIR"
+$ECHO "  temporary directory:   $TMP_DIR"
+$ECHO "  checking that needed directories and files exist...\c"
+
+# check for directories
+for DIR in "$BIN_DIR" "$PSEUDO_DIR" ; do
+    if test ! -d $DIR ; then
+        $ECHO
+        $ECHO "ERROR: $DIR not existent or not a directory"
+        $ECHO "Aborting"
+        exit 1
+    fi
+done
+for DIR in "$TMP_DIR" "$EXAMPLE_DIR/results" ; do
+    if test ! -d $DIR ; then
+        mkdir $DIR
+    fi
+done
+cd $EXAMPLE_DIR/results
+
+# check for executables
+for FILE in $BIN_LIST ; do
+    if test ! -x $BIN_DIR/$FILE ; then
+        $ECHO
+        $ECHO "ERROR: $BIN_DIR/$FILE not existent or not executable"
+        $ECHO "Aborting"
+        exit 1
+    fi
+done
+
+# check for pseudopotentials
+for FILE in $PSEUDO_LIST ; do
+    if test ! -r $PSEUDO_DIR/$FILE ; then
+       $ECHO
+       $ECHO "Downloading $FILE to $PSEUDO_DIR...\c"
+            $WGET $PSEUDO_DIR/$FILE $NETWORK_PSEUDO/$FILE 2> /dev/null
+    fi
+    if test $? != 0; then
+        $ECHO
+        $ECHO "ERROR: $PSEUDO_DIR/$FILE not existent or not readable"
+        $ECHO "Aborting"
+        exit 1
+    fi
+done
+$ECHO " done"
+
+# how to run executables
+PW_COMMAND="mpirun -np 2 $BIN_DIR/pw.x $PARA_POSTFIX"
+$ECHO
+$ECHO "  running pw.x as: $PW_COMMAND"
+$ECHO
+
+# self-consistent calculation
+cat > Ni-chg.in << EOF
+ &control
+    calculation  = 'scf'
+    restart_mode = 'from_scratch'
+    pseudo_dir   = '$PSEUDO_DIR/'
+    outdir       = '$TMP_DIR/'
+ /
+ &system
+    ibrav=2
+    celldm(1)=6.6593949
+    nat=4
+    ntyp=1
+    nbnd=25
+    ecutwfc=42.0
+    ecutrho=462.0
+    nspin=2
+    starting_magnetization(1)=-1
+    occupations = 'smearing'
+    smearing='cold'
+    degauss=0.02
+ /
+ &electrons
+    startingwfc='random'
+    diagonalization='cg'
+    conv_thr = 1e-12,
+    mixing_beta=0.3,
+ /
+ATOMIC_SPECIES
+  Ni   58.6934      Ni.pz-nd-rrkjus.UPF
+ATOMIC_POSITIONS
+  Ni    0.000    0.000    0.000
+  Ni    0.000    1.755    1.755
+  Ni    1.755    0.000    1.755
+  Ni    1.755    1.755    0.000
+K_POINTS {automatic}
+  1 1 1 0 0 0
+EOF
+$ECHO "  running self-consistent calculation in Ni...\c"
+$PW_COMMAND < Ni-chg.in > Ni-chg.out
+check_failure $?
+$ECHO " done"
+
+# Berry Phase calculation
+cat > Ni-BP.in << EOF
+ &control
+    calculation   = 'nscf'
+    pseudo_dir    = '$PSEUDO_DIR/'
+    outdir        = '$TMP_DIR/'
+    lberry        = .true.
+    gdir          = 3
+    nppstr        = 7
+ /
+ &system
+    ibrav         = 2
+    celldm(1)     = 6.6593949
+    nat           = 4
+    ntyp          = 1
+    nbnd          = 28
+    ecutwfc       = 42.0
+    ecutrho       = 462.0
+    nspin         = 2
+    starting_magnetization(1)=-1
+    occupations   = 'fixed'
+    degauss       = 0.00
+ /
+ &electrons
+    startingwfc   = 'random'
+    diagonalization='cg'
+    conv_thr      = 1e-10
+    mixing_beta   = 0.3
+ /
+ATOMIC_SPECIES
+  Ni   58.6934      Ni.pz-nd-rrkjus.UPF
+ATOMIC_POSITIONS
+  Ni    0.000    0.000    0.000
+  Ni    0.000    1.755    1.755
+  Ni    1.755    0.000    1.755
+  Ni    1.755    1.755    0.000
+K_POINTS {automatic}
+  1 1 1  0 0 0
+EOF
+$ECHO "  running Berry Phase calculation for Ni...\c"
+$PW_COMMAND < Ni-BP.in > Ni-BP.out
+check_failure $?
+$ECHO " done"
+
+# clean TMP_DIR
+$ECHO "  cleaning $TMP_DIR...\c"
+rm -rf $TMP_DIR/pwscf*
+$ECHO " done"
+
+
+$ECHO
+$ECHO "$EXAMPLE_DIR: done"
