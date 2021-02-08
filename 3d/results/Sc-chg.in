@@ -5,12 +5,13 @@
     outdir       = '/home/edmondium/quantum/tempdir/'
  /
  &system
-    ibrav=3
-    celldm(1)=5.4991
+    ibrav=4
+    celldm(1)=6.2531037
+    celldm(3)=9.96509277
     nat=1
     ntyp=1
     nbnd=25
-    ecutwfc=48.0
+    ecutwfc=30.0
     lspinorb=.false.
     noncolin=.false.
     starting_magnetization(1)=-1
@@ -25,8 +26,8 @@
     mixing_beta=0.3,
  /
 ATOMIC_SPECIES
-  Cr   51.9961      Cr.pbe-spn-rrkjus_psl.1.0.0.UPF
+  Sc   44.955908      Sc.pbe-nsp-van.UPF
 ATOMIC_POSITIONS alat
-  Cr    0.000    0.000    0.000
+  Sc    0.000    0.000    0.000
 K_POINTS {automatic}
   16 16 16 0 0 0

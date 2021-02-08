@@ -1,5 +1,5 @@
 
-     Program PWSCF v.6.5 starts on 21Jan2021 at 12:23: 0 
+     Program PWSCF v.6.5 starts on 26Jan2021 at 11:15:51 
 
      This program is part of the open-source Quantum ESPRESSO suite
      for quantum simulation of materials; please cite
@@ -9,10 +9,10 @@
      in publications or presentations arising from this work. More details at
      http://www.quantum-espresso.org/quote
 
-     Parallel version (MPI), running on     2 processors
+     Parallel version (MPI), running on     4 processors
 
      MPI processes distributed on     1 nodes
-     R & G space division:  proc/nbgrp/npool/nimage =       2
+     R & G space division:  proc/nbgrp/npool/nimage =       4
      Waiting for input...
      Reading input from standard input
      Message from routine read_cards :
@@ -37,8 +37,8 @@
      Parallelization info
      --------------------
      sticks:   dense  smooth     PW     G-vecs:    dense   smooth      PW
-     Min         189      93     30                23571     7845    1528
-     Max         190      94     31                23598     7864    1533
+     Min          94      46     15                11772     3912     761
+     Max          95      47     16                11803     3939     770
      Sum         379     187     61                47169    15709    3061
 
 
@@ -109,9 +109,9 @@
 
      Smooth grid:    15709 G-vectors     FFT dimensions: (  18,  18, 128)
 
-     Estimated max dynamical RAM per process >      79.69 MB
+     Estimated max dynamical RAM per process >      40.31 MB
 
-     Estimated total dynamical RAM >     159.37 MB
+     Estimated total dynamical RAM >     161.24 MB
      Generating pointlists ...
      new r_m :   0.1487 (alat units)  0.7046 (a.u.) for type    1
 
@@ -127,73 +127,6 @@
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
      c_bands:  2 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
@@ -210,20 +143,24 @@
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  2 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
-     c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  2 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
@@ -247,19 +184,83 @@
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
      c_bands:  2 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  3 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  1 eigenvalues not converged
+     c_bands:  2 eigenvalues not converged
      c_bands:  2 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
      c_bands:  1 eigenvalues not converged
 
-     ethr =  5.56E-13,  avg # of iterations = 65.8
+     ethr =  5.56E-13,  avg # of iterations = 66.1
 
-     total cpu time spent up to now is      505.8 secs
+     total cpu time spent up to now is      566.7 secs
 
      End of band structure calculation
 
@@ -387,11 +388,11 @@
         the polarization vector (in different units, and being Omega
         the volume of the unit cell):
 
-           P =   0.0000342  (mod  36.4343012)  (e/Omega).bohr
+           P =   0.0000398  (mod  36.4343012)  (e/Omega).bohr
 
-           P =   0.0000000  (mod   0.0514432)  e/bohr^2
+           P =   0.0000001  (mod   0.0514432)  e/bohr^2
 
-           P =   0.0000028  (mod   2.9410987)  C/m^2
+           P =   0.0000032  (mod   2.9410987)  C/m^2
 
         The polarization direction is:  ( 0.00000 , 0.00000 , 1.00000 )
 
@@ -402,54 +403,54 @@
 
      Writing output data file /home/edmondium/quantum/tempdir/pwscf.save/
 
-     init_run     :      0.69s CPU      0.81s WALL (       1 calls)
-     electrons    :    483.85s CPU    503.40s WALL (       1 calls)
+     init_run     :      0.33s CPU      0.40s WALL (       1 calls)
+     electrons    :    535.74s CPU    563.91s WALL (       1 calls)
 
      Called by init_run:
      wfcinit      :      0.00s CPU      0.00s WALL (       1 calls)
-     potinit      :      0.04s CPU      0.04s WALL (       1 calls)
-     hinit0       :      0.28s CPU      0.28s WALL (       1 calls)
+     potinit      :      0.03s CPU      0.04s WALL (       1 calls)
+     hinit0       :      0.14s CPU      0.14s WALL (       1 calls)
 
      Called by electrons:
-     c_bands      :    482.35s CPU    501.80s WALL (       1 calls)
+     c_bands      :    534.30s CPU    562.34s WALL (       1 calls)
      v_of_rho     :      0.02s CPU      0.02s WALL (       1 calls)
-     newd         :      0.27s CPU      0.40s WALL (       1 calls)
+     newd         :      0.09s CPU      0.15s WALL (       1 calls)
 
      Called by c_bands:
-     init_us_2    :      0.30s CPU      0.32s WALL (    1140 calls)
-     ccgdiagg     :    454.11s CPU    472.47s WALL (    2157 calls)
-     wfcrot       :     27.41s CPU     28.37s WALL (    2157 calls)
+     init_us_2    :      0.28s CPU      0.30s WALL (    1140 calls)
+     ccgdiagg     :    506.04s CPU    532.50s WALL (    2175 calls)
+     wfcrot       :     27.58s CPU     29.08s WALL (    2175 calls)
 
      Called by sum_band:
 
      Called by *cgdiagg:
-     h_psi        :    374.73s CPU    389.78s WALL (  703511 calls)
-     s_psi        :     21.69s CPU     22.78s WALL ( 1404865 calls)
-     cdiaghg      :      0.65s CPU      0.66s WALL (    2157 calls)
+     h_psi        :    390.51s CPU    411.15s WALL (  705618 calls)
+     s_psi        :     24.19s CPU     25.85s WALL ( 1409061 calls)
+     cdiaghg      :      0.80s CPU      0.84s WALL (    2175 calls)
 
      Called by h_psi:
-     h_psi:calbec :     19.28s CPU     20.07s WALL (  703511 calls)
-     vloc_psi     :    299.75s CPU    311.80s WALL (  703511 calls)
-     add_vuspsi   :     52.09s CPU     54.34s WALL (  703511 calls)
-     hs_1psi      :    365.42s CPU    380.04s WALL (  701354 calls)
-     s_1psi       :     24.53s CPU     25.40s WALL (  701354 calls)
+     h_psi:calbec :     35.25s CPU     37.08s WALL (  705618 calls)
+     vloc_psi     :    292.35s CPU    307.88s WALL (  705618 calls)
+     add_vuspsi   :     58.09s CPU     61.46s WALL (  705618 calls)
+     hs_1psi      :    384.67s CPU    404.68s WALL (  703443 calls)
+     s_1psi       :     31.92s CPU     33.37s WALL (  703443 calls)
 
      General routines
-     calbec       :     29.09s CPU     30.56s WALL ( 1405585 calls)
+     calbec       :     50.75s CPU     53.87s WALL ( 1409781 calls)
      fft          :      0.05s CPU      0.05s WALL (       9 calls)
      ffts         :      0.00s CPU      0.00s WALL (       2 calls)
-     fftw         :    260.60s CPU    271.01s WALL ( 1523500 calls)
+     fftw         :    252.08s CPU    265.46s WALL ( 1528686 calls)
      interpolate  :      0.01s CPU      0.01s WALL (       2 calls)
-     davcio       :      0.25s CPU      0.35s WALL (    1560 calls)
+     davcio       :      0.28s CPU      0.38s WALL (    1560 calls)
 
      Parallel routines
-     fft_scatt_xy :     36.28s CPU     37.71s WALL ( 1523511 calls)
-     fft_scatt_yz :     38.69s CPU     40.38s WALL ( 1523511 calls)
+     fft_scatt_xy :     26.83s CPU     28.22s WALL ( 1528697 calls)
+     fft_scatt_yz :     90.14s CPU     95.14s WALL ( 1528697 calls)
 
-     PWSCF        :   8m 7.81s CPU   8m27.99s WALL
+     PWSCF        :   8m60.00s CPU   9m29.23s WALL
 
 
-   This run was terminated on:  12:31:28  21Jan2021            
+   This run was terminated on:  11:25:20  26Jan2021            
 
 =------------------------------------------------------------------------------=
    JOB DONE.

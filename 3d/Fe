@@ -69,7 +69,7 @@ done
 $ECHO " done"
 
 # how to run executables
-PW_COMMAND="mpirun -np 2 $BIN_DIR/pw.x $PARA_POSTFIX"
+PW_COMMAND="$PARA_PREFIX $BIN_DIR/pw.x $PARA_POSTFIX"
 $ECHO
 $ECHO "  running pw.x as: $PW_COMMAND"
 $ECHO

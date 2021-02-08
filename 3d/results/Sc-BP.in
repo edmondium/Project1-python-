@@ -8,12 +8,12 @@
  /
  &system
     ibrav         = 4
-    celldm(1)     = 5.57620385
-    celldm(3)     = 8.85431176
+    celldm(1)     = 6.2531037
+    celldm(3)     = 9.96509277
     nat           = 1
     ntyp          = 1
     nbnd          = 28
-    ecutwfc       = 10.0
+    ecutwfc       = 30.0
     lspinorb      = .false.
     noncolin      = .false.
     starting_magnetization(1)=-1
@@ -27,8 +27,8 @@
     mixing_beta   = 0.3
  /
 ATOMIC_SPECIES
-  Ti   47.867      Ti.pbe-sp-van_ak.UPF
+  Sc   44.955908      Sc.pbe-nsp-van.UPF
 ATOMIC_POSITIONS alat
-  Ti    0.000    0.000    0.000
+  Sc    0.000    0.000    0.000
 K_POINTS {automatic}
   16 16 16  0 0 0

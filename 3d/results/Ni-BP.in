@@ -7,15 +7,14 @@
     nppstr        = 7
  /
  &system
-    ibrav         = 4
-    celldm(1)     = 5.57620385
-    celldm(3)     = 8.85431176
-    nat           = 1
+    ibrav         = 2
+    celldm(1)     = 6.6593949
+    nat           = 4
     ntyp          = 1
     nbnd          = 28
-    ecutwfc       = 10.0
-    lspinorb      = .false.
-    noncolin      = .false.
+    ecutwfc       = 42.0
+    ecutrho       = 462.0
+    nspin         = 2
     starting_magnetization(1)=-1
     occupations   = 'fixed'
     degauss       = 0.00
@@ -27,8 +26,11 @@
     mixing_beta   = 0.3
  /
 ATOMIC_SPECIES
-  Ti   47.867      Ti.pbe-sp-van_ak.UPF
-ATOMIC_POSITIONS alat
-  Ti    0.000    0.000    0.000
+  Ni   58.6934      Ni.pz-nd-rrkjus.UPF
+ATOMIC_POSITIONS
+  Ni    0.000    0.000    0.000
+  Ni    0.000    1.755    1.755
+  Ni    1.755    0.000    1.755
+  Ni    1.755    1.755    0.000
 K_POINTS {automatic}
   16 16 16  0 0 0

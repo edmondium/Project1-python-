@@ -69,7 +69,7 @@ done
 $ECHO " done"
 
 # how to run executables
-PW_COMMAND="mpirun -np 2 $BIN_DIR/pw.x $PARA_POSTFIX"
+PW_COMMAND="$PARA_PREFIX $BIN_DIR/pw.x $PARA_POSTFIX"
 $ECHO
 $ECHO "  running pw.x as: $PW_COMMAND"
 $ECHO
@@ -110,7 +110,7 @@ ATOMIC_POSITIONS
   Ni    1.755    0.000    1.755
   Ni    1.755    1.755    0.000
 K_POINTS {automatic}
-  1 1 1 0 0 0
+  16 16 16 0 0 0
 EOF
 $ECHO "  running self-consistent calculation in Ni...\c"
 $PW_COMMAND < Ni-chg.in > Ni-chg.out
@@ -154,7 +154,7 @@ ATOMIC_POSITIONS
   Ni    1.755    0.000    1.755
   Ni    1.755    1.755    0.000
 K_POINTS {automatic}
-  1 1 1  0 0 0
+  16 16 16  0 0 0
 EOF
 $ECHO "  running Berry Phase calculation for Ni...\c"
 $PW_COMMAND < Ni-BP.in > Ni-BP.out

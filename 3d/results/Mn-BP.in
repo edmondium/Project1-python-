@@ -1,7 +1,7 @@
  &control
     calculation   = 'nscf'
-    pseudo_dir    = '/home/edmondium/Documents/qe-6.7/pseudo/'
-    outdir        = '/home/edmondium/Documents/qe-6.7/tempdir/'
+    pseudo_dir    = '/home/edmondium/quantum/pseudo/'
+    outdir        = '/home/edmondium/quantum/tempdir/'
     lberry        = .true.
     gdir          = 3
     nppstr        = 7
