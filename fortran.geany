@@ -14,13 +14,37 @@ indent_mode=2
 
 [project]
 name=fortran
-base_path=/nfs/users3/aefnicko/projects/Project1-python-/fortran/
+base_path=/home/edmondium/Documents/Project1-python-/fortran
+description=
+file_patterns=
 
 [long line marker]
 long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=1
-FILE_NAME_0=488;C;0;EUTF-8;1;1;0;%2Fnfs%2Fusers3%2Faefnicko%2Fprojects%2FProject1-python-%2Ffortran%2Fcppmacro.h;0;4
-FILE_NAME_1=976;F77;0;EUTF-8;0;1;0;%2Fnfs%2Fusers3%2Faefnicko%2Fprojects%2FProject1-python-%2Ffortran%2Fglobal.f;0;4
+current_page=0
+FILE_NAME_0=2592;Make;0;EUTF-8;1;1;0;%2Fhome%2Fedmondium%2FDocuments%2FProject1-python-%2Ffortran%2Fsrc%2FMakefile;0;4
+
+[editor]
+line_wrapping=false
+line_break_column=72
+auto_continue_multiline=true
+
+[VTE]
+last_dir=/home/edmondium
+
+[build-menu]
+F77FT_00_LB=_Compile
+F77FT_00_CM=gfortran -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include -DCPPTRAD   -c -o selfenergy.o selfenergy.f
+F77FT_00_WD=
+F77FT_01_LB=_Build
+F77FT_01_CM=
+F77FT_01_WD=
+filetypes=F77;Fortran;
+FortranFT_00_LB=_Compile
+FortranFT_00_CM=gfortran -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include -DCPPTRAD   -c -o selfenergy.o selfenergy.f90
+FortranFT_00_WD=
+FortranFT_01_LB=_Build
+FortranFT_01_CM=
+FortranFT_01_WD=

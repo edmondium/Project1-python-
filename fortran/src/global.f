@@ -16,15 +16,15 @@ c   MCOMPLEX_dp = real_dp if INV is defined, otherwise complex_dp
       implicit none
       public
 
-c      Mpi( include 'mpif.h' )   kuset comment
+      Mpi( include 'mpif.h' )
 
       integer                    :: inp,uin
       character(128)             :: inpfile
 
 c Input parameters
-      logical                    :: metal,lkptadd,storeibz
-     & ,alignbd,obloechl,ozero,trsoff,tetraf,coulstore,fullpw,ologdiv,
-     & noapw,l_soc,l_qsgw,lcore_soc,use_sym,bandinfo,otimer
+      logical                    :: metal,lkptadd,storeibz,alignbd,obloechl,
+     &                              ozero,trsoff,tetraf,coulstore,fullpw,ologdiv,
+     &                              noapw,l_soc,l_qsgw,lcore_soc,use_sym,bandinfo,otimer
       integer                    :: restart,ovxc,option
       integer                    :: njob,oselfc,freqint,ogrid
       integer,       allocatable :: smooth(:),omit(:)      
