@@ -1,1 +1,0 @@
-../coulomb_wannier.f

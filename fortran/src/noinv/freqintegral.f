@@ -1,1 +1,0 @@
-../freqintegral.f
