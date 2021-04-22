@@ -36,14 +36,14 @@ last_dir=/home/edmondium
 
 [build-menu]
 F77FT_00_LB=_Compile
-F77FT_00_CM=gfortran -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include -DCPPTRAD   -c -o selfenergy.o selfenergy.f
+F77FT_00_CM=mpif90 -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include -DCPPTRAD   -c -o selfenergy.o selfenergy.f
 F77FT_00_WD=
 F77FT_01_LB=_Build
 F77FT_01_CM=
 F77FT_01_WD=
 filetypes=F77;Fortran;
 FortranFT_00_LB=_Compile
-FortranFT_00_CM=gfortran -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include -DCPPTRAD   -c -o selfenergy.o selfenergy.f90
+FortranFT_00_CM=mpif90 -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include -DCPPTRAD   -c -o selfenergy.o selfenergy.f90
 FortranFT_00_WD=
 FortranFT_01_LB=_Build
 FortranFT_01_CM=

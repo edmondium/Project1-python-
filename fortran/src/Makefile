@@ -33,8 +33,8 @@ CHECK    =  -fcheck=all,no-array-temps -fbacktrace
 FFLAGS   =  -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include
 CPPFLAGS =  -DCPPTRAD
 LDFLAGS  =  -L/usr/lib/x86_64-linux-gnu/hdf5/openmpi//lib
-LDLIBS   = -llapack -lblas   -L/usr/lib/gcc/x86_64-linux-gnu/10 -L/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/10/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/10/../../.. -lgfortran -lm -lquadmath -lfftw3 -lhdf5 -lhdf5_fortran
-FC       = gfortran
+LDLIBS   = -llapack -lblas   -L/usr/lib/x86_64-linux-gnu/openmpi/lib/fortran/gfortran -L/usr/lib/gcc/x86_64-linux-gnu/10 -L/usr/lib/gcc/x86_64-linux-gnu/10/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/10/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/10/../../.. -lmpi_usempif08 -lmpi_usempi_ignore_tkr -lmpi_mpifh -lmpi -lopen-rte -lopen-pal -lhwloc -ldl -levent -levent_pthreads -lutil -lgfortran -lm -lrt -lz -lquadmath -lpthread -lfftw3 -lhdf5 -lhdf5_fortran
+FC       = mpif90
 DFT      = _fleurR5.1
 MODE     = user
 EXEC    ?= spex.x
