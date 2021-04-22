@@ -1,1 +1,0 @@
-../checkinput.f
