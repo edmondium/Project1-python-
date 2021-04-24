@@ -1,0 +1,1 @@
+mpif90 -O2 -ffixed-line-length-none -cpp -fallow-argument-mismatch -I/usr/lib/x86_64-linux-gnu/hdf5/openmpi//include -DCPPTRAD   -c -o selfenergy.o selfenergy.f
