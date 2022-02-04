@@ -1,1 +1,0 @@
-../getinput.f
