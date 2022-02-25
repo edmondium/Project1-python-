@@ -1,6 +1,6 @@
 #Adopted from Kristjan Haule
 #Modified more and optimized by Edmond Febrinicko Armay
-from scipy import weave
+#from scipy import weave
 from scipy import optimize
 from scipy import integrate
 from scipy import interpolate
@@ -23,6 +23,7 @@ from math import sqrt
 from math import fabs
 import excor
 import fccLattice
+import cython
 ########################################################
 # Routines for solving the ODE problem and Poisson EQ. #
 ########################################################
@@ -50,7 +51,8 @@ def Numerov(F, dx, f0=0.0, f1=1e-3):
     Solution = zeros(Nmax, dtype=float)
     Solution[0] = f0
     Solution[1] = f1
-    weave.inline(codeNumerov, ['F', 'Nmax', 'dx', 'Solution'], type_converters=weave.converters.blitz, compiler = 'gcc')
+    #weave.inline(codeNumerov, ['F', 'Nmax', 'dx', 'Solution'], type_converters=weave.converters.blitz, compiler = 'gcc')
+    cython.inline(codeNumerov, ['F', 'Nmax', 'dx', 'Solution'])
     return Solution
 
 def NumerovGen(F, U, dx, f0=0.0, f1=1e-3):
@@ -250,13 +252,13 @@ def FindCoreStates(core, R, Veff, Z, fraction=4.):
                 n += 1
             dE/=decrease
             v0 = v1
-    print ' Found core states for (n,l) = [',
+    print (' Found core states for (n,l) = ['),
     for state in states:
-        print '(%d,%d)' % state[:2],
-    print '], E = [',
+        print ('(%d,%d)' % state[:2]),
+    print ('], E = ['),
     for state in states:
-        print '%f,' % state[2],
-    print ']'
+        print ('%f,' % state[2]),
+    print (']')
     return (coreRho[::-1], coreE, coreZ, states)
 
 def ComputeEigensystem(k, Km, Olap_I, Enu, logDer, RMuffinTin, Vol, VKSi=0):
@@ -607,7 +609,7 @@ def Atom_charge(Z, core, mix=0.3, RmaxAtom=10., Natom=3001, precision=1e-5, Nitt
        pot = (ExcVxc*pow(R0, 2)-0.5*UHartree*R0)*nrho[::-1]*4*pi
        Etot = integrate.simps(pot, R0) + Ebs
        Ediff = abs(Etot-Etot_old)
-       print RED, ' %d), Etot = %f, Eband = %f, Ediff = %f' % (itt, Etot, Ebs, Ediff), DEFAULT_COLOR
+       print (RED, ' %d), Etot = %f, Eband = %f, Ediff = %f' % (itt, Etot, Ebs, Ediff), DEFAULT_COLOR)
        #print ' %d), Etot = %f, Eband = %f, Ediff = %f' % (itt, Etot, Ebs, Ediff)
        # Mixing
        rho = mix*nrho[::-1] + (1-mix)*rho
@@ -665,7 +667,7 @@ if __name__ == '__main__':
     Zcor = sum([2*(2*l+1)*nl for l,nl in enumerate(core)])
     # Valence number of electrons
     Zval = Z-Zcor
-    print "Z core =", Zcor, "and Z valence =", Zval
+    print ("Z core =", Zcor, "and Z valence =", Zval)
     #print "Z core =", Zcor, "and Z value =", Zval
     # Create atomic charge to have a good starting point
     (Atom_R0, Atom_rho) = Atom_charge(Z, core, 0.3)
@@ -681,10 +683,10 @@ if __name__ == '__main__':
     #VMT = 4*pi*RMuffinTin**3/3.                 # Volume of MT
     VMT = (4/3.)*pi*pow(RMuffinTin, 3)
     Vinter = fcc.Volume-VMT                     # Volume of the interstitial region
-    print "Muffin-Tin radius          = ", RMuffinTin
-    print "Volume of the MT sphere    = ", VMT
-    print "Volume of the unit cell    = ", fcc.Volume
-    print "Volume of the interstitial = ", Vinter
+    print ("Muffin-Tin radius          = ", RMuffinTin)
+    print ("Volume of the MT sphere    = ", VMT)
+    print ("Volume of the unit cell    = ", fcc.Volume)
+    print ("Volume of the interstitial = ", Vinter)
     fcc.GenerateReciprocalVectors(4, CutOffK)   # Reciprocal bravais lattice is built, K points taken into account only for |K|<CutOff
     fcc.ChoosePointsInFBZ(nkp,0)                # Choose the path in the 1BZ or the k-points in the irreducible 1BZ
 
@@ -700,7 +702,7 @@ if __name__ == '__main__':
     TotRho = interpolate.splev(R0, AtomRhoSpline)
     
     for itt in range(Nitt):  # self-consistent loop
-        print '%d) Preparing potential' % itt
+        print ('%d) Preparing potential' % itt)
         UHartree = SolvePoisson(Z, R0, TotRho)
         # Adding exchange-correlation part
         Vxc = [XC.Vx(rsi)+XC.Vc(rsi) for rsi in rs(TotRho)]
@@ -708,13 +710,13 @@ if __name__ == '__main__':
         nVeff = (UHartree - Z)/R0 + Vxc
         zeroMT = nVeff[-1]  # New MT zero
         nVeff -= zeroMT
-        print ' Muffin-Tin zero is', zeroMT
+        print (' Muffin-Tin zero is', zeroMT)
         Veff = nVeff
         
         (logDer, Psi_l, Psip_l) = Wave(Z, Enu, R0, Veff)
         
         (coreRho, coreE, coreZ, core_states) = FindCoreStates(core, R0[::-1], Veff[::-1], Z)
-        print ' core Z =', coreZ, ', core E =', coreE
+        print (' core Z =', coreZ, ', core E =', coreE)
         # This is the main loop over all k-points
         Ek=[]; w0=[]; w1=[]; w2=[]; wi=[]
         for ik,k in enumerate(fcc.kp):
@@ -724,7 +726,7 @@ if __name__ == '__main__':
 
         # New chemical potential
         mu = optimize.brentq(rootChemicalPotential, mu_mm[0], mu_mm[1], args=(Ek, fcc.wkp, Zval, beta))
-        print GREEN, 'New chemical potential is', mu, DEFAULT_COLOR
+        print (GREEN, 'New chemical potential is', mu, DEFAULT_COLOR)
         MTRho = ComputeMTDensity(mu, Ek, fcc.wkp, w0, w1, w2, Psi_l, Psip_l, beta)
         nTotRho = MTRho + coreRho
         sMTRho = integrate.simps(MTRho*pow(R0, 2)*(4*pi), R0)
@@ -732,14 +734,14 @@ if __name__ == '__main__':
         sIntRho = ComputeInterstitialCharge(mu, Ek, wi, fcc.wkp, beta)
         #sCoreRho = integrate.simps(coreRho*R0**2*(4*pi), R0)
         sCoreRho = integrate.simps(coreRho*pow(R0, 2)*(4*pi), R0)
-        print ' Z value =', Zval, '~', sMTRho+sIntRho
-        print ' Weight in the MT sphere =', sMTRho, 'and in the interstitials =', sIntRho, 'and in core =', sCoreRho
+        print (' Z value =', Zval, '~', sMTRho+sIntRho)
+        print (' Weight in the MT sphere =', sMTRho, 'and in the interstitials =', sIntRho, 'and in core =', sCoreRho)
         renorm = Z/(sMTRho+sIntRho+sCoreRho)
-        print ' Total charge found =', sMTRho+sIntRho+sCoreRho, 'should be', Z, '-> renormalizing by', renorm
+        print (' Total charge found =', sMTRho+sIntRho+sCoreRho, 'should be', Z, '-> renormalizing by', renorm)
         nTotRho *= renorm
 
         DiffRho = integrate.simps(abs(nTotRho-TotRho), R0)
-        print BLUE, 'Electron density difference =', DiffRho, DEFAULT_COLOR
+        print (BLUE, 'Electron density difference =', DiffRho, DEFAULT_COLOR)
         if (DiffRho<DRho):
             break
         
