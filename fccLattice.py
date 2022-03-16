@@ -21,7 +21,7 @@ class FccLattice:
         self.a2 = array([0,0.5*LatConst,0.5*LatConst])
         Vc = dot(cross(self.a0,self.a1),self.a2) # Volume
         self.Volume = abs(Vc)
-        print "Volume is", self.Volume
+        print ("Volume is", self.Volume)
         self.b0 = (2*pi/Vc)*cross(self.a1,self.a2)
         self.b1 = (2*pi/Vc)*cross(self.a2,self.a0)
         self.b2 = (2*pi/Vc)*cross(self.a0,self.a1)
@@ -49,7 +49,7 @@ class FccLattice:
                     
         Kmesh0.sort(lambda x,y: cmp(dot(x,x), dot(y,y)))
         self.Km = array(Kmesh0)
-        print "K-mesh size =", len(self.Km)
+        print ("K-mesh size =", len(self.Km))
     def ChoosePointsInFBZ(self, nkp, type=0): # Chooses the path in the 1BZ we will use
         
         def kv0(iq, q):
@@ -59,14 +59,14 @@ class FccLattice:
             kp=[]
             for i0 in range(nkp):
                 r0 = kv0(i0,nkp)
-                print 'r0 = ', r0
+                print ('r0 = ', r0)
                 for i1 in range(nkp):
                     r1 = kv0(i1,nkp)
                     for i2 in range(nkp):
                         r2 = kv0(i2,nkp)
                         k = self.b0*r0+self.b1*r1+self.b2*r2
                         kp.append(k)
-            print "Number of all k-points =", len(kp)
+            print ("Number of all k-points =", len(kp))
             kpc = []
             for k in kp:
                 kpc.append(sort(k))
@@ -101,13 +101,13 @@ class FccLattice:
             # irreducible k-points are stored in the output vectors
             self.wkp = array(wkp)/sum(wkp)
             self.kp = array(irkp)
-            print "Number of irreducible k points is", len(self.kp)
+            print ("Number of irreducible k points is", len(self.kp))
             #for ik,k in enumerate(self.kmesh):
             #    print "%10.6f"*3 % tuple(k), '  ', self.wkp[ik]
             
         else:        # Choose one particular path in the 1BZ - for plotting purposes
             nkp = 4*int(nkp/4.)+1
-            print "number of k-points =", nkp
+            print ("number of k-points =", nkp)
             self.kp = zeros((nkp,3), dtype=float)
             N0=nkp/4
             #self.Points = [('$\Gamma$', 0), ('$X$', N0), ('$L$', 2*N0), ('$\Gamma$', 3*N0), ('$K$', 4*N0)]

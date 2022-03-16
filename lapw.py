@@ -1,6 +1,6 @@
 #Adopted from Kristjan Haule
 #Modified more and optimized by Edmond Febrinicko Armay
-#from scipy import weave
+from scipy import weave
 from scipy import optimize
 from scipy import integrate
 from scipy import interpolate
@@ -51,8 +51,8 @@ def Numerov(F, dx, f0=0.0, f1=1e-3):
     Solution = zeros(Nmax, dtype=float)
     Solution[0] = f0
     Solution[1] = f1
-    #weave.inline(codeNumerov, ['F', 'Nmax', 'dx', 'Solution'], type_converters=weave.converters.blitz, compiler = 'gcc')
-    cython.inline(codeNumerov, ['F', 'Nmax', 'dx', 'Solution'])
+    weave.inline(codeNumerov, ['F', 'Nmax', 'dx', 'Solution'], type_converters=weave.converters.blitz, compiler = 'gcc')
+    #cython.inline(codeNumerov, ['F', 'Nmax', 'dx', 'Solution'], type_converters=cython.converters.blitz, compiler = 'gcc')
     return Solution
 
 def NumerovGen(F, U, dx, f0=0.0, f1=1e-3):
@@ -82,6 +82,7 @@ def NumerovGen(F, U, dx, f0=0.0, f1=1e-3):
     Solution[0] = f0
     Solution[1] = f1
     weave.inline(codeNumerov, ['F', 'U', 'Nmax', 'dx', 'Solution'], type_converters=weave.converters.blitz, compiler = 'gcc')
+    #cython.inline(codeNumerov, ['F', 'U', 'Nmax', 'dx', 'Solution'], type_converters=cython.converters.blitz, compiler = 'gcc')
     return Solution
 
 def CRHS(E, l, R, Veff):
@@ -96,6 +97,7 @@ def CRHS(E, l, R, Veff):
     #RHS = zeros(len(R), dtype=float)
     RHS = zeros(N, dtype=float)
     weave.inline(codeRHS, ['N', 'E', 'l', 'R', 'Veff', 'RHS'], type_converters=weave.converters.blitz, compiler = 'gcc')
+    #cython.inline(codeRHS, ['N', 'E', 'l', 'R', 'Veff', 'RHS'], type_converters=cython, compiler = 'gcc')
     return RHS
 
 def SolvePoisson(Zq, R, rho):

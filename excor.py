@@ -8,13 +8,13 @@ Adopted from Kristjan Haule
 Modified more and optimized by Edmond Febrinicko Armay    
 """
 from math import pi
-from math import exp
-from math import sin
+#from math import exp
+#from math import sin
 from math import sqrt
 from math import atan
 from math import log
-from pythtb import *
-from numpy import array
+#from pythtb import *
+#from numpy import array
 #from math import cos
 class  ExchangeCorrelation(object):
     """******************************************************************************/
@@ -28,8 +28,8 @@ class  ExchangeCorrelation(object):
     type=5 - Correlation of Chachiyo                                           */
     ******************************************************************************/
     """
-    #def __init__(self, type_=3):
-    def __init__(self, type_=5):
+    def __init__(self, type_=3):
+    #def __init__(self, type_=5):
         self.type = type_
         #self.alphax = 0.610887057710857 #//(3/(2 Pi))^(2/3)
         self.alphax = pow(3/(2*pi), 2/3)
@@ -60,19 +60,19 @@ class  ExchangeCorrelation(object):
             self.A = 21
 
     def Vx(self, rs): # Vx
-        copper=w90(r"copper")
-        fermi_ev=0.7E+01
-        my_model=copper.model(zero_energy=fermi_ev, min_hopping_norm=0.01, max_distance=None, ignorable_imaginary_part=0.01)
+        #copper=w90(r"copper")
+        #fermi_ev=0.7E+01
+        #my_model=copper.model(zero_energy=fermi_ev, min_hopping_norm=0.01, max_distance=None, ignorable_imaginary_part=0.01)
         
-        #return -self.alphax/rs
+        return -self.alphax/rs
         #return (-1/(2*pow(pi, 2)))*(exp(-self.alphax*rs)/pow(rs, 3))*((sin(self.alphax*rs)/rs)-(self.alphax*cos(self.alphax*rs)))
-        return (-1/(2*pow(pi, 2)))*(exp(-self.alphax*rs)/pow(rs, 3))*(sin(self.alphax*rs)/rs) #Yukawa's screened exchange
+        #return (-1/(2*pow(pi, 2)))*(exp(-self.alphax*rs)/pow(rs, 3))*(sin(self.alphax*rs)/rs) #Yukawa's screened exchange
         
     def ExVx(self, rs): # Ex-Vx
         return 0.25*self.alphax/rs
     
-    """def Ex(self, rs):
-        return -0.75*self.alphax/rs"""
+    def Ex(self, rs):
+        return -0.75*self.alphax/rs
 
     def Vc(self, rs): # Vc
         if (self.type<3):
@@ -84,20 +84,20 @@ class  ExchangeCorrelation(object):
             atnp = atan(self.Qp/(2*x+self.bp))
             ecp = 0.5*self.Ap*(log(x*x/xpx)+self.cp1*atnp-self.cp3*(log((x-self.xp0)**2/xpx)+self.cp2*atnp))
             return ecp - self.Ap/6.*(self.cp*(x-self.xp0)-self.bp*x*self.xp0)/((x-self.xp0)*xpx)
-        #else:
-        elif(self.type<5):
+        else:
+        #elif(self.type<5):
             if rs>1:
                 return self.gamma/(1+self.beta1*sqrt(rs)+self.beta2*rs)*(1+7/6.*self.beta1*sqrt(rs)+self.beta2*rs)/(1+self.beta1*sqrt(rs)+self.beta2*rs)
             else:
                 return self.Aw*log(rs)+self.Bw-self.Aw/3.+2/3.*self.Cw*rs*log(rs)+(2*self.D-self.Cw)*rs/3.
-        else:
+        #else:
             #paramagnetic
-            a=(log(2)-1)/(2*pow(pi, 2))
-            b=20.4562557
+            #a=(log(2)-1)/(2*pow(pi, 2))
+            #b=20.4562557
             #ferromagnetic
             #a=(log(2)-1)/(4*pow(pi, 2))
             #b=27.4203609
-            return a*log(1+(b/rs)+(b/pow(rs, 2)))
+            #return a*log(1+(b/rs)+(b/pow(rs, 2)))
     def EcVc(self, rs): # Ec-Vc
         if self.type<3 :
             x = rs/self.A
@@ -106,11 +106,11 @@ class  ExchangeCorrelation(object):
         elif self.type<4: # type=3 VWN
             x = sqrt(rs)
             return self.Ap/6.*(self.cp*(x-self.xp0)-self.bp*x*self.xp0)/((x-self.xp0)*(x*x+self.bp*x+self.cp))
-        #else:
-        elif self.type<5:
+        else:
+        #elif self.type<5:
             if rs>1:
                 return 2*self.gamma/(1+self.beta1*sqrt(rs)+self.beta2*rs)-Vc(rs)
             else:
                 return self.Aw*log(rs)+self.Bw+self.Cw*rs*log(rs)+self.D*rs-Vc(rs)
-        else:
-            return 0
+        #else:
+            #return 0
