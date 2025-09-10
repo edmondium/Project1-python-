@@ -403,6 +403,22 @@ def FindCoreStates(core, R, Veff, Z, fraction=4.):
     
     return (coreRho[::-1], coreE, coreZ, states)
 
+def dlog_bessel_j(lmax, x):
+    """Calculates logarithmic derivative of the spherical bessel functions
+        It returns three quantities:
+            (x*d/dx log(j_l(x)),  j_l(x), the product of the first two)
+        for l up to lmax
+        The last entry is important for singular cases: when x is zero of bessel function. In this case
+        the logarithmic derivative is diverging while j*dlog(j(x))/dx is not
+    """
+    if (fabs(x)<1e-5):
+        return [(l, x**l/special.factorial2(2*l+1), l*x**l/special.factorial2(2*l+1)) for l in range(lmax+1)] #return [(l, x**l/misc.factorial2(2*l+1), l*x**l/misc.factorial2(2*l+1)) for l in range(lmax+1)]
+    else:
+        #(jls, djls) = special.sph_jn(lmax,x) # all jl's and derivatives for l=[0,...lmax]
+        jls = np.array([special.spherical_jn(l, x) for l in range(lmax + 1)])
+        djls= np.array([special.spherical_jn(l, x, derivative = True) for l in range(lmax + 1)])
+        return [(x*djls[l]/jls[l], jls[l], x*djls[l]) for l in range(lmax+1)]
+
 def ComputeEigensystem(k, Km, Olap_I, Enu, logDer, RMuffinTin, Vol, VKSi=0):
     """The main part of LAPW algorithm: Implements valence H[K,K'] and O[K,K'] and diagonalizes them.
        Implements all equations on page 26 and page 30.
@@ -410,7 +426,7 @@ def ComputeEigensystem(k, Km, Olap_I, Enu, logDer, RMuffinTin, Vol, VKSi=0):
        electronic charge in real space.
     """
 
-    def dlog_bessel_j(lmax, x):
+    '''def dlog_bessel_j(lmax, x):
         """Calculates logarithmic derivative of the spherical bessel functions
            It returns three quantities:
              (x*d/dx log(j_l(x)),  j_l(x), the product of the first two)
@@ -424,7 +440,7 @@ def ComputeEigensystem(k, Km, Olap_I, Enu, logDer, RMuffinTin, Vol, VKSi=0):
             #(jls, djls) = special.sph_jn(lmax,x) # all jl's and derivatives for l=[0,...lmax]
             jls = np.array([special.spherical_jn(l, x) for l in range(lmax + 1)])
             djls= np.array([special.spherical_jn(l, x, derivative = True) for l in range(lmax + 1)])
-            return [(x*djls[l]/jls[l], jls[l], x*djls[l]) for l in range(lmax+1)]
+            return [(x*djls[l]/jls[l], jls[l], x*djls[l]) for l in range(lmax+1)]'''
 
 
     # Here we prepare coefficients a and b defined in Eq. 60-61 on page 29.
