@@ -73,7 +73,8 @@ class  ExchangeCorrelation(object):
         #my proposed research
         else:
             return self.Ap * log(1 + (1/pow(rs, 1/2)) + (1/rs) + (1/pow(rs, 3/2)) + (1/pow(rs, 2))) + self.Bp
-
+            #return self.Ap * log(rs) + self.Bp #high density limit (r_s -> 0)
+            
     def EcVc(self, rs): # Ec-Vc
         if self.type<3 :
             x = rs/self.A
